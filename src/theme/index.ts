@@ -1,11 +1,49 @@
 import { createTheme } from "@shopify/restyle";
+import { StyleSheet } from "react-native";
 
 const pallete = {
   orange: "#E95401",
   background: "#1A1A1A",
   white: "#FFF",
   black: "#000",
+  grayInput: "#FFFFFF80",
 };
+
+const styles = StyleSheet.create({
+    input: {
+        width: "80%",
+        height: 55,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: pallete.orange,
+      },
+      boxVariant: {
+        width: "80%",
+        height: 55,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 25,
+        borderBottomLeftRadius: 25,
+        borderBottomRightRadius: 25,
+        borderWidth: 1,
+        borderColor: pallete.orange,
+      },
+      buttonAgendar: {
+        width: 282,
+        height: 50,
+        backgroundColor: pallete.orange,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 20,
+      },
+      button: {
+        width: 200,
+        height: 50,
+        backgroundColor: pallete.orange,
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: 10,
+      },
+})
 
 const theme = createTheme({
   colors: {
@@ -13,6 +51,7 @@ const theme = createTheme({
     background: pallete.background,
     white: pallete.white,
     black: pallete.black,
+    grayInput: pallete.grayInput,
   },
   spacing: {
     s: 8,
@@ -67,39 +106,7 @@ const theme = createTheme({
       color: pallete.white,
     },
   },
-  input: {
-    width: "80%",
-    height: 55,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: pallete.orange,
-  },
-  boxVariant: {
-    width: "80%",
-    height: 55,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 25,
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
-    borderWidth: 1,
-    borderColor: pallete.orange,
-  },
-  buttonAgendar: {
-    width: 282,
-    height: 50,
-    backgroundColor: pallete.orange,
-    alignItems: "center",
-    ustifyContent: "center",
-    borderRadius: 20,
-  },
-  button: {
-    width: 200,
-    height: 50,
-    backgroundColor: pallete.orange,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 10,
-  },
+  styles,
 });
 
 export type Theme = typeof theme;

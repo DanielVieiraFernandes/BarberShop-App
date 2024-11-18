@@ -5,7 +5,7 @@ import { AuthStack } from "./AuthStack";
 
 export function Router() {
 
-  const auth: boolean = true;
+  const auth = false;
 
   return (
     <NavigationContainer>

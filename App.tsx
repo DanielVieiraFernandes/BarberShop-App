@@ -14,6 +14,7 @@ import {
   Poppins_900Black,
 } from "@expo-google-fonts/poppins";
 import { useCallback } from "react";
+import { Box } from "./src/app/components/RestyleComponents/RestyleComponents";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -38,12 +39,14 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <SafeAreaProvider onLayout={onLayoutRootView}>
-        <StatusBar
+       <Box flex={1}>
+       <StatusBar
           style="dark"
           translucent
           backgroundColor={theme.colors.orange}
         />
         <Router />
+       </Box>
       </SafeAreaProvider>
     </ThemeProvider>
   );
