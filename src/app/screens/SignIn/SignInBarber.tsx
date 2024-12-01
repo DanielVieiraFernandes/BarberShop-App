@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export function Register() {
+export function SignInBarber() {
   return (
     <View>
-      <Text>Register</Text>
+      <Text>SignInBarber</Text>
     </View>
   )
 }

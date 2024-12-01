@@ -1,44 +1,34 @@
 import {
   TextInput,
   TextInputProps,
-  ViewProps,
 } from "react-native";
-import React, { ReactNode } from "react";
+import React from "react";
 import { Controller, UseControllerProps } from "react-hook-form";
 import { useTheme } from "@shopify/restyle";
 import { Theme } from "../../../theme";
-import { Box } from "../RestyleComponents/RestyleComponents";
+
 
 type Props = {
-  formControl: UseControllerProps;
-  inputControl: TextInputProps;
+  formControl: UseControllerProps<any>; 
+  inputControl?: TextInputProps; 
 };
 
-type InputProps = {
-  children?: ReactNode;
-  style?: ViewProps["style"];
-};
-
-export function Input({ children, style }: InputProps) {
-  return <Box style={style}>{children}</Box>;
-}
-
-function Field({ formControl, inputControl }: Props) {
-
+export function Input({ formControl, inputControl }: Props) {
   const theme = useTheme<Theme>();
 
   return (
     <Controller
-      render={() => (
+      render={({field: {onChange, onBlur, value}}) => (
         <TextInput
           style={theme.styles.input}
           placeholderTextColor={theme.colors.grayInput}
-          {...inputControl}
+          value={value}
+          onChangeText={onChange}
+          onBlur={onBlur}
+          {...inputControl} 
         />
       )}
       {...formControl}
     />
   );
 }
-
-Input.Field = Field;

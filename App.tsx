@@ -4,6 +4,8 @@ import { Router } from "./src/app/routes/Router";
 import { ThemeProvider } from "@shopify/restyle";
 import theme from "./src/theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import 'react-native-gesture-handler';
+import 'react-native-reanimated';
 import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
@@ -14,7 +16,9 @@ import {
   Poppins_900Black,
 } from "@expo-google-fonts/poppins";
 import { useCallback } from "react";
-import { Box } from "./src/app/components/RestyleComponents/RestyleComponents";
+
+import { AuthProvider } from "./src/app/context/AuthContext";
+
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -38,16 +42,16 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <AuthProvider>
       <SafeAreaProvider onLayout={onLayoutRootView}>
-       <Box flex={1}>
        <StatusBar
           style="dark"
           translucent
           backgroundColor={theme.colors.orange}
         />
         <Router />
-       </Box>
       </SafeAreaProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
