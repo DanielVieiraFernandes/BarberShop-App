@@ -32,3 +32,21 @@ Primeiramente, clone o repositório para o seu computador:
 
 ```bash
 git clone https://github.com/DanielVieiraFernandes/BarberShop-App.git
+```
+### 2. Baixar as Dependências
+
+acesse a pasta do seu projeto e instale as dependências:
+
+```bash
+cd nome do projeto
+npm install
+```
+
+### 3. Configurar o Firebase
+
+entre no Firebase console e crie um projeto
+
+depois entre no [React Native Firebase](https://rnfirebase.io/) e siga a documentação para configurar o projeto.
+
+
+
