@@ -31,4 +31,4 @@ Com esse aplicativo, os barbeiros podem gerenciar sua agenda e os clientes podem
 Primeiramente, clone o repositório para o seu computador:
 
 ```bash
-git clone https://github.com/seu-usuario/barbeiro-connect.git
+git clone https://github.com/DanielVieiraFernandes/BarberShop-App.git
