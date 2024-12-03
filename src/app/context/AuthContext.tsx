@@ -4,6 +4,8 @@ import auth from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { MyBarberSchema } from "../screens/Register/RegisterBarbeiro";
 import { MyClientSchema } from "../screens/Register/RegisterClient";
+import { MySignInClientSchema } from "../screens/SignIn/SignInClient";
+import { MySignInBarberSchema } from "../screens/SignIn/SignInBarber";
 
 type authData = {
   userType: string;
@@ -12,8 +14,7 @@ type authData = {
 type authContext = {
   userBarber: FirebaseAuthTypes.User | null;
   userClient: FirebaseAuthTypes.User | null;
-  notUser: boolean;
-  signIn: (email: string, senha: string) => Promise<void>;
+  signIn: (data: MySignInClientSchema) => Promise<void> | ((data: MySignInBarberSchema) => Promise<void>);
   signOut: () => void;
   cadastrarBarbeiro: (data: MyBarberSchema) => Promise<void>;
   cadastrarCliente: (data: MyClientSchema) => Promise<void>;
@@ -37,45 +38,49 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userClient, setUserClient] = useState<FirebaseAuthTypes.User | null>(
     null
   );
-  const [notUser, setNotUser] = useState<boolean>(false);
 
-  const onSubscribe = async () => {
-    const user = auth().onAuthStateChanged(async (user) => {
+  const onSubscribe = () => {
+    const unsubscribe = auth().onAuthStateChanged(async (user) => {
+      console.log("onAuthStateChanged Triggered:", user);
       if (user) {
-        const userDoc = await firestore()
-          .collection("users")
-          .doc(user.uid)
-          .get();
-        const data = userDoc.data();
-        if (data) {
-          setAuthType({
-            userType: data.tipo,
-          });
-          if (data.tipo === "Barber") {
-            setUserBarber(user);
-          } else if (data.tipo === " Client") {
-            setUserClient(user);
+        try {
+          const userDoc = await firestore().collection("users").doc(user.uid).get();
+          const data = userDoc.data();
+          console.log("User Data:", data);
+          if (data) {
+            if (data.tipo === "Barber") {
+              setUserBarber(user);
+              setUserClient(null);
+            } else if (data.tipo === "Client") {
+              setUserBarber(null);
+              setUserClient(user);
+            }
           } else {
-            setNotUser(true);
+            setUserBarber(null);
+            setUserClient(null);
           }
-        } else {
-          setAuthType(null);
+        } catch (error) {
+          console.error("Error fetching user document:", error);
         }
-      } 
+      } else {
+        setUserBarber(null);
+        setUserClient(null);
+      }
       setIsloanding(false);
     });
-    return user;
+  
+    return unsubscribe;
   };
-
+  
   useEffect(() => {
     onSubscribe();
   }, []);
 
-  const signIn = async (email: string, senha: string) => {
+  const signIn = async (data: MySignInClientSchema | MySignInBarberSchema) => {
     try {
       const userCredential = await auth().signInWithEmailAndPassword(
-        email,
-        senha
+        data.email,
+        data.senha
       );
       const user = userCredential.user;
 
@@ -88,10 +93,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         });
         if (userData.tipo === "Barber") {
           setUserBarber(user);
-        } else if (userData.tipo === " Client") {
+          setUserClient(null);
+        } else if (userData.tipo === "Client") {
           setUserClient(user);
-        }else {
-          setNotUser(true);
+          setUserBarber(null);
         }
       }
     } catch (error) {
@@ -102,6 +107,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signOut = () => {
     auth().signOut();
     setAuthType(null);
+    setUserBarber(null);
+    setUserClient(null);
   };
 
   const cadastrarBarbeiro = async (data: MyBarberSchema) => {
@@ -129,12 +136,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setAuthType({
             userType: userData.tipo,
           });
-          if (userData.tipo === "Barber") {
+          if (authType?.userType === "Barber") {
             setUserBarber(user);
-          } else if (userData.tipo === " Client") {
+            setUserClient(null);
+          } else if (authType?.userType === "Client") {
+            setUserBarber(null);
             setUserClient(user);
-          } else {
-            setNotUser(true);
           }
         }
       }
@@ -173,12 +180,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setAuthType({
             userType: userData.tipo,
           });
-          if (userData.tipo === "Barber") {
+          if (authType?.userType === "Barber") {
             setUserBarber(user);
-          } else if (userData.tipo === " Client") {
+            setUserClient(null);
+          } else if (authType?.userType === "Client") {
+            setUserBarber(null);
             setUserClient(user);
-          } else {
-            setNotUser(true);
           }
         }
       }
@@ -202,7 +209,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         userBarber,
         userClient,
         isButtonLoading,
-        notUser,
       }}
     >
       {children}

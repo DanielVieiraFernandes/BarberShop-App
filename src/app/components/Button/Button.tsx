@@ -14,7 +14,7 @@ export function Button({ title, buttonProps}: Props) {
 
   return (
     <TouchableOpacity
-      style={[theme.styles.buttonAgendar]}
+      style={[buttonProps?.style,theme.styles.buttonAgendar]}
       {...buttonProps}
     >
       <Text variant="inputSemiBold">{title}</Text>

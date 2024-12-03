@@ -4,9 +4,18 @@ import { BarbeiroStack } from "./BarbeiroStack";
 import { ClienteStack } from "./ClienteStack";
 import { AuthStack } from "./AuthStack";
 import { NavigationContainer } from "@react-navigation/native";
+import { Loading } from "../components/Loading/Loading";
 
 export default function AppNavigator() {
-  const { userBarber, userClient, notUser } = useAuth();
+  const { userBarber, userClient, isLoading } = useAuth();
+
+console.log("wwwww")
+
+  if(isLoading){
+    return <Loading />
+  }
+
+
 
   return (
     <NavigationContainer>
@@ -14,8 +23,6 @@ export default function AppNavigator() {
         <BarbeiroStack />
       ) : userClient ? (
         <ClienteStack />
-      ) : notUser ? (
-        <AuthStack />
       ) : (
         <AuthStack />
       )}
