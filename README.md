@@ -1,8 +1,8 @@
-# Projeto Barbeiro Connect
+# Projeto BarberShop
 
 ## Descrição
 
-O **Barbeiro Connect** é um aplicativo desenvolvido para facilitar a conexão entre barbeiros e clientes, permitindo que os clientes agendem cortes de cabelo de forma rápida e prática. A plataforma oferece uma maneira eficiente de agendar horários, selecionar serviços e fazer o acompanhamento dos agendamentos diretamente pelo celular.
+O **BarberShop** é um aplicativo desenvolvido para facilitar a conexão entre barbeiros e clientes, permitindo que os clientes agendem cortes de cabelo de forma rápida e prática. A plataforma oferece uma maneira eficiente de agendar horários, selecionar serviços e fazer o acompanhamento dos agendamentos diretamente pelo celular.
 
 Com esse aplicativo, os barbeiros podem gerenciar sua agenda e os clientes podem escolher os melhores horários para realizar seus cortes, proporcionando uma experiência mais organizada e conveniente.
 
