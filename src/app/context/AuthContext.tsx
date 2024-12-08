@@ -14,7 +14,9 @@ type authData = {
 type authContext = {
   userBarber: FirebaseAuthTypes.User | null;
   userClient: FirebaseAuthTypes.User | null;
-  signIn: (data: MySignInClientSchema) => Promise<void> | ((data: MySignInBarberSchema) => Promise<void>);
+  signIn: (
+    data: MySignInClientSchema
+  ) => Promise<void> | ((data: MySignInBarberSchema) => Promise<void>);
   signOut: () => void;
   cadastrarBarbeiro: (data: MyBarberSchema) => Promise<void>;
   cadastrarCliente: (data: MyClientSchema) => Promise<void>;
@@ -44,23 +46,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log("onAuthStateChanged Triggered:", user);
       if (user) {
         try {
-          const userDoc = await firestore().collection("users").doc(user.uid).get();
-          const data = userDoc.data();
-          console.log("User Data:", data);
-          if (data) {
-            if (data.tipo === "Barber") {
-              setUserBarber(user);
-              setUserClient(null);
-            } else if (data.tipo === "Client") {
-              setUserBarber(null);
-              setUserClient(user);
-            }
-          } else {
-            setUserBarber(null);
-            setUserClient(null);
-          }
+          const subscribe = firestore()
+            .collection("users")
+            .doc(user.uid)
+            .onSnapshot((docS) => {
+              const userData = docS.data();
+              if (userData) {
+                if (userData.tipo === "Barber") {
+                  setUserBarber(user);
+                  setUserClient(null);
+                } else if (userData.tipo === "Client") {
+                  setUserClient(user);
+                  setUserBarber(null);
+                } else {
+                  setUserClient(null);
+                  setUserBarber(null);
+                }
+              }
+            });
+          return subscribe;
         } catch (error) {
           console.error("Error fetching user document:", error);
+        } finally {
+          setIsloanding(false);
         }
       } else {
         setUserBarber(null);
@@ -68,10 +76,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
       setIsloanding(false);
     });
-  
+
     return unsubscribe;
   };
-  
+
   useEffect(() => {
     onSubscribe();
   }, []);
@@ -146,8 +154,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       }
       console.log("Registro concluído");
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error.code === "auth/email-already-in-use") {
+        throw new Error("Este Email já está em uso. Por favor, tente outro");
+      }
+      if (error.code === "auth/invalid-email") {
+        throw new Error(
+          "O email fornecido é inválido. Verifique e tente novamente"
+        );
+      }
+      if (error.code === "auth/weak-password") {
+        throw new Error("A senha é muito fraca. Escolha uma senha mais forte");
+      }
+
+      throw new Error("Erro ao cadastrar. Tente novamente.");
     } finally {
       setIsloanding(false);
       setIsButtonLoading(false);
@@ -175,6 +195,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           .collection("users")
           .doc(user.uid)
           .get();
+
         const userData = userDoc.data();
         if (userData) {
           setAuthType({

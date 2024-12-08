@@ -1,11 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
 import { Router } from "./src/app/routes/Router";
 import { ThemeProvider } from "@shopify/restyle";
 import theme from "./src/theme";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import 'react-native-gesture-handler';
-import 'react-native-reanimated';
+import "react-native-gesture-handler";
+import "react-native-reanimated";
 import * as SplashScreen from "expo-splash-screen";
 import {
   useFonts,
@@ -18,6 +17,8 @@ import {
 import { useCallback } from "react";
 
 import { AuthProvider } from "./src/app/context/AuthContext";
+import {AlertNotification} from "./src/app/context/AlertNotification";
+import 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -41,17 +42,19 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <AuthProvider>
-      <SafeAreaProvider onLayout={onLayoutRootView}>
-       <StatusBar
-          style="dark"
-          translucent
-          backgroundColor={theme.colors.orange}
-        />
-        <Router />
-      </SafeAreaProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <AlertNotification>
+      <ThemeProvider theme={theme}>
+        <AuthProvider>
+          <SafeAreaProvider onLayout={onLayoutRootView}>
+            <StatusBar
+              style="dark"
+              translucent
+              backgroundColor={theme.colors.orange}
+            />
+            <Router />
+          </SafeAreaProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </AlertNotification>
   );
 }

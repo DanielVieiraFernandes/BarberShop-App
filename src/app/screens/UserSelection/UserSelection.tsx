@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Text,
@@ -11,9 +11,14 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { StackRoutesList } from "../../routes/AuthStack";
 import { useNavigation } from "@react-navigation/native";
 
+import { TouchableHighlight } from "react-native";
+
+import notifee, { AndroidImportance } from "@notifee/react-native";
+
 type NavigationProps = StackNavigationProp<StackRoutesList>;
 
 export function UserSelection() {
+
   const navigation = useNavigation<NavigationProps>();
   const theme = useTheme<Theme>();
   const barbeiroImage = require("../../../../assets/barber.png");
@@ -27,8 +32,32 @@ export function UserSelection() {
     navigation.navigate("RegisterClient");
   };
 
+  async function displayNotification() {
+    await notifee.requestPermission();
+
+    const channelId = await notifee.createChannel({
+      id: 'test',
+      name: 'sales',
+      vibration: true,
+      importance: AndroidImportance.HIGH
+    });
+
+    await notifee.displayNotification({
+      id: '7',
+      title: 'Ola Daniel',
+      body: 'Essa é minha primeira notificação.',
+      android: {
+        channelId
+      }
+    })
+  }
+
+
+
+
   return (
-    <Box
+
+      <Box
       flex={1}
       justifyContent="center"
       alignItems="center"
@@ -51,7 +80,10 @@ export function UserSelection() {
           buttonProps={{ onPress: () => onSubmitCliente() }}
           title="Cliente"
         />
+        
+     
       </Box>
     </Box>
+ 
   );
 }

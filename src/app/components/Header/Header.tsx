@@ -7,18 +7,27 @@ import { Theme } from "../../../theme";
 import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-export function Header() {
+type Props = {
+  set?: JSX.Element;
+};
+
+export function Header({ set }: Props) {
   const theme = useTheme<Theme>();
   const icon = require("../../../../assets/icone.png");
   const navigation = useNavigation();
+
+  const renderIcon = (set) || (
+    <Ionicons
+      name="chevron-back-sharp"
+      onPress={() => navigation.goBack()}
+      size={34}
+      color={theme.colors.orange}
+    />
+  );
+
   return (
     <Box justifyContent="space-around" alignItems="center" flexDirection="row">
-      <Ionicons
-        name="chevron-back-sharp"
-        onPress={() => navigation.goBack()}
-        size={34}
-        color={theme.colors.orange}
-      />
+      {renderIcon}
       <Image
         source={icon}
         style={{ width: 150, height: 150, position: "relative", top: 35 }}
